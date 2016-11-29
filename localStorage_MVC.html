@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>LocalStorage MVC Pattern</title>
+    <style>
+   
+    </style>
+</head>
+<body>
+    <form id="new-note-form">
+        <label>Add New Item</label>
+        <input type="text" id="new-note-content">
+        <button>Add Item</button>
+    </form>
+
+     <form id="clearForm">
+         <button>Clear Items</button>
+     </form>
+
+
+    <ul id="notes">
+       
+    </ul>
+
+
+    <div id="new-note-content">
+        
+    </div>
+
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+//Model - your data / save data to database or array
+//View - update the html, add click events, DOM elements
+//Controller - Get, Set, Increment the Model data. Responsible for connecting the view and the model. Takes user input. Saves and Delete
+
+$(function(){
+
+    var model = {
+        //first create your object as a string
+        init: function() {
+            if (!localStorage.notes) {
+                localStorage.notes = JSON.stringify([]);
+            }
+        },
+
+
+        //add takes an object as an argument and pushes it to localStorage
+        add: function(obj) {
+            var data = JSON.parse(localStorage.notes); //return as an object
+            data.push(obj); //add to that object
+            localStorage.notes = JSON.stringify(data); //store it back as a string
+        },
+
+
+        clear: function(){
+            localStorage.clear();
+        },
+
+
+        getAllNotes: function() {
+            return JSON.parse(localStorage.notes); //return the object
+        }
+    };
+
+
+    var controller = {
+        //add text 'baron' @TODO modify the function to take multiple textbox form values
+        addNewNote: function(noteStr) {
+            model.add({
+                content: noteStr
+            });
+            //get the object and loop though the object name
+            view.render();
+        },
+
+
+        //return the object
+        getNotes: function() {
+            return model.getAllNotes();//have to return for the forEach() statement to work
+        },
+
+
+        clearNotes: function(){
+            model.clear();
+        },
+
+
+        init: function() {
+            model.init();/*first create your object as a string*/
+            view.init();/*cache's DOM elements, submit form, instantiate looping through object */
+        }
+    };
+
+
+    var view = {
+        init: function() {
+            /*DOM elements*/
+            this.noteList = $('#notes');
+            var newNoteForm = $('#new-note-form');
+            var newNoteContent = $('#new-note-content');
+            var clearNoteContent = $('#clearForm');
+
+
+            newNoteForm.submit(function(e){
+                //add 'baron' as an object value
+                controller.addNewNote(newNoteContent.val());
+
+                //clear the text field
+                newNoteContent.val('');
+
+                //prevent refreshnig when button is clicked
+                e.preventDefault();
+            });
+
+
+            /*clear list*/
+            clearNoteContent.submit(function(){
+                controller.clearNotes();
+            });
+
+
+            //instantiate the object loop
+            view.render();
+        },
+        //get the object and loop though the object name
+        render: function(){
+            var htmlStr = '';
+            controller.getNotes().forEach(function(note){
+                htmlStr += '<li class="note">'+
+                        note.content +
+                    '</li>';
+            });
+
+
+            //append to the ul
+            this.noteList.html( htmlStr );
+
+        }
+    };
+
+    controller.init();/*instantiate model and the view*/
+});
+
+</script>
+</body>
+</html>
