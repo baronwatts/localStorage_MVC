@@ -90,15 +90,15 @@ $(function(){
 
 
         init: function() {
-            model.init();/*creates a localStorage array*/
-            view.init();/*cache's DOM elements, executes controller methods and calls the render function */
+            model.init();//creates a localStorage array
+            view.init();//cache's DOM elements, executes controller methods and calls the render function
         }
     };
 
 
     var view = {
         init: function() {
-            /*DOM elements*/
+            //DOM elements
             this.noteList = $('#notes');
             var newNoteForm = $('#new-note-form');
             var newNoteContent = $('#new-note-content');
@@ -117,7 +117,7 @@ $(function(){
             });
 
 
-            /*clear list*/
+           //clear list
             clearNoteContent.submit(function(){
                 controller.clearNotes();
             });
@@ -142,7 +142,7 @@ $(function(){
         }
     };
 
-    controller.init();/*instantiate model and the view*/
+    controller.init();//instantiate the model and the view
 });
 
 </script>
