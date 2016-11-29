@@ -40,7 +40,7 @@
 $(function(){
 
     var model = {
-        //first create your object as a string
+        //connect to database or create and empty array if one doesn't exists
         init: function() {
             if (!localStorage.notes) {
                 localStorage.notes = JSON.stringify([]);
@@ -68,7 +68,7 @@ $(function(){
 
 
     var controller = {
-        //add text 'baron' @TODO modify the function to take multiple textbox form values
+        //the content value is equal the textbox value that is passed in the parameter
         addNewNote: function(noteStr) {
             model.add({
                 content: noteStr
@@ -80,7 +80,7 @@ $(function(){
 
         //return the object
         getNotes: function() {
-            return model.getAllNotes();//have to return for the forEach() statement to work
+            return model.getAllNotes();//return the data from the model so we can loop through it.
         },
 
 
@@ -90,8 +90,8 @@ $(function(){
 
 
         init: function() {
-            model.init();/*first create your object as a string*/
-            view.init();/*cache's DOM elements, submit form, instantiate looping through object */
+            model.init();/*creates a localStorage array*/
+            view.init();/*cache's DOM elements, executes controller methods and calls the render function */
         }
     };
 
@@ -106,13 +106,13 @@ $(function(){
 
 
             newNoteForm.submit(function(e){
-                //add 'baron' as an object value
+                //gets the texbox value so we can pass that value to an object
                 controller.addNewNote(newNoteContent.val());
 
                 //clear the text field
                 newNoteContent.val('');
 
-                //prevent refreshnig when button is clicked
+                //prevent refreshing when button is clicked
                 e.preventDefault();
             });
 
@@ -123,10 +123,10 @@ $(function(){
             });
 
 
-            //instantiate the object loop
+            //updates the DOM
             view.render();
         },
-        //get the object and loop though the object name
+        //executes controller methods and loops through the returned data then update the html with that data
         render: function(){
             var htmlStr = '';
             controller.getNotes().forEach(function(note){
